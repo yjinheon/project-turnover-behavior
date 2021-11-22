@@ -1,0 +1,1 @@
+# https://wikidocs.net/1418  __init__.py의 용도
