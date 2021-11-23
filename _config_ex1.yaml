@@ -1,0 +1,29 @@
+# --- Project --- #
+project_name : "turnover_behavior"
+description : ""
+author : "jinheon yoon"
+email : "yjinheon@gmail.com"
+
+
+# --- Initial Setting --- #
+data_directory: "../data"
+data_name: "GP18_2019_use.csv"
+drop_columns: [""]
+target_name: ""
+test_size: 0.3
+random_state: 42
+model_directory: "../models"
+model_name: lightgbm.json
+
+
+# hyperarameters
+
+n_neighbors: 3
+weights: uniform
+algorithm: auto
+leaf_size: 15
+p: 2
+metric: minkowski
+n_jobs: 1
+
+
