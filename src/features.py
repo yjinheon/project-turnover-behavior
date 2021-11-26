@@ -31,9 +31,6 @@ from sklearn.metrics import f1_score
 
 
 
-
-
-
 engineer(df):
     """
     preprocessing dataframe

@@ -9,5 +9,15 @@
 
 ### 211123
 
-- featuer.py
+- featuer.py 추가
+- feature engineering
 
+### 211124
+
+- feature selection method 검토
+- 데이터 종류에 따른 연관성 검정 방법 검토
+  - numeric data
+    - 상관분석
+    - 다중공선성 검정
+  - categorical data
+    - 독립성 검정
