@@ -4,6 +4,9 @@ import numpy as np
 import joblib   
 import os
 import yaml
+from tools import *
+from tools.glimpse import *
+
 # folder to load config file
 CONFIG_PATH = "../"
 # Function to load yaml configuration file
@@ -37,3 +40,4 @@ if __name__ == "__main__":
     print(df.columns)
     print(df.info())
     print(df.describe())
+    print(glimpse(df))

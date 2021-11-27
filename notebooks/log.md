@@ -18,6 +18,7 @@
 - 데이터 종류에 따른 연관성 검정 방법 검토
   - numeric data
     - 상관분석
-    - 다중공선성 검정
+    - 다중공선성 검정(VIF)
   - categorical data
     - 독립성 검정
+    - Mutual Information Feature Selection(SelectKbest)

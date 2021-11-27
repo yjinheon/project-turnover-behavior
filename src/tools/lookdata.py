@@ -1,9 +1,13 @@
-# from https://github.com/slapadasbas
-# 정규성 검정 등은 pinguin package 활용
+#  데이터프레임 진단용 함수들
+#
+#
+# 
+# Reference:
+# - https://github.com/slapadasbas
+
 
 import pandas as pd
 import numpy as np
-
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -73,6 +77,8 @@ def diagnose(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def diagnose_numeric(df: pd.DataFrame) -> pd.DataFrame:
+    # numerical_features = df.select_dtypes(include='number').columns.tolist()
+    # select dtypes 를 활용해 범용성을 높이다.
     num_cols = [f for f in df.columns if 'int' in str(df[f].dtype) or 'float' in str(df[f].dtype)]
     n = _dtypes(df).join(df.describe().transpose(), how='right')
 
@@ -88,6 +94,7 @@ def diagnose_numeric(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def diagnose_categorical(df: pd.DataFrame) -> pd.DataFrame:
+    # categorical_features = df.select_dtypes(exclude=''number').columns.tolist()
     cat_cols = ([x for x in df.columns if str(df[x].dtype) == 'category'])
     dfs = []
     for col in cat_cols:
@@ -151,3 +158,37 @@ def plot_outliers(df: pd.DataFrame) -> None:
 
 
 help(_dtypes)
+
+
+def glimpse(df, maxvals=10, maxlen=110):
+    print('Shape: ', df.shape)
+    
+    def pad(y):
+        max_len = max([len(x) for x in y])
+        return [x.ljust(max_len) for x in y]
+    
+    # Column Name
+    toprnt = pad(df.columns.tolist())
+    
+    # Column Type
+    toprnt = pad([toprnt[i] + ' ' + str(df.iloc[:,i].dtype) for i in range(df.shape[1])])
+    
+    # Num NAs
+    num_nas = [df.iloc[:,i].isnull().sum() for i in range(df.shape[1])]
+    num_nas_ratio = [int(round(x*100/df.shape[0])) for x in num_nas]
+    num_nas_str = [str(x) + ' (' + str(y) + '%)' for x,y in zip(num_nas, num_nas_ratio)]
+    max_len = max([len(x) for x in num_nas_str])
+    num_nas_str = [x.rjust(max_len) for x in num_nas_str]
+    toprnt = [x + ' ' + y + ' NAs' for x,y in zip(toprnt, num_nas_str)]
+    
+    # Separator
+    toprnt = [x + ' : ' for x in toprnt]
+    
+    # Values
+    toprnt = [toprnt[i] + ', '.join([str(y) for y in df.iloc[:min([maxvals,df.shape[0]]), i]]) for i in range(df.shape[1])]
+    
+    # Trim to maxlen
+    toprnt = [x[:min(maxlen, len(x))] for x in toprnt]
+    
+    for x in toprnt:
+        print(x)
