@@ -29,22 +29,29 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 
 
-
-
-engineer(df):
+get_demo(df):
     """
-    preprocessing dataframe
+    근로자 외 성별, 나이, 직업, 직업별 연령대 분포를 확인하는 함수
+    """
+
+
+
+# subset data
+
+def subset_df(df):
+    worker_df = df[df['g181sq006'].notnull()] # 근로자(일의 종류)
     
-    - 임금종사자(근로자만 분석대상으로 추출)
-    - 상용근로자만 분석대상으로 추출
-    """
-    worker_df = df[df['g181sq006'].notnull()]
     
     # 임금종사자 여부
+    """
+    1	타인 또는 회사에 고용되어 보수(돈)를 받고 일한다.(직장, 아르바이트 등 포함)
+    2	내 사업을 한다.
+    3	가족의 일을 돈을 받지 않고 돕는다.
+    """
     worker_cond = [
-        (worker_df['g181sq006'] == 1),
+        (worker_df['g181sq006'] == 1), 
         (worker_df['g181sq006'] == 2),
-        (worker_df
+        (worker_df['g181sq006'] == 3)
     ]
     
     worker_choices = ['employed','self_employed','non_paid']
@@ -52,26 +59,27 @@ engineer(df):
     worker_df['worker_type'] = np.select(worker_cond, worker_choices,default=None)
     
     # 임금근로자만 추출
-    worker_df = worker_df['worker_type'] == 'employed'
+    worker_df = worker_df[worker_df['worker_type'] == 'employed'] 
     
     
     # 상용 근로자만 추출
     """
     1	상용근로자
-    2	임시근로자
-    3	일용근로자
+    2	상용근로자 외 임시,일용직
     """
+    regular_cond = [worker_df['g181a021'] == 1,
+                    worker_df['g181a021'] != 1]
     
-    # 이직 경험빈도
     
-    turnover_cond = [
-        (worker_df['g181d001'].isnull()==True),
-        (worker_df['g181d001'] == 1),
-        
-# 다중공성성 확인
+    worker_df['regular_worker'] = np.select(regular_cond, ['yes','no'],default=None)
+    worker_df = worker_df[worker_df['regular_worker'] == 'yes']
+    
+    
+    return worker_df
 
 
-
+def engineer(df):
+    
 
 # Scalings
 

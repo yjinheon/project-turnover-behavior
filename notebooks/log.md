@@ -22,3 +22,34 @@
   - categorical data
     - 독립성 검정
     - Mutual Information Feature Selection(SelectKbest)
+    
+
+### 211125
+
+- Decisition Tree 검토
+- RandomForest 검토
+
+
+### 211126
+
+- RandomForest 검토
+  + Python numpy로 구현
+  
+
+### 211129
+
+- Pycaret 라이브러리를 활용한 모델 비교 검토
+- https://ichi.pro/ko/pycaret-multiclass-classification-eul-iyonghan-mil-jongja-bunlyu-yecheug-134705925439622
+
+### 211130
+
+- TestAPI를 위한 EC2 서버 구축 검토
+
+
+### 211201
+
+- muticlass 분류문제에 대한 해석 공부 
+- 분류문제 시각화 검토
+
+### 211202
+
