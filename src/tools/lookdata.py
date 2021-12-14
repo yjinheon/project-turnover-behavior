@@ -1,7 +1,6 @@
 #  데이터프레임 진단용 함수들
-#
-#
-# 
+#  통계적 진단은 statsmodel 활용
+#  정규성 검정 등은 pinguin package 활용
 # Reference:
 # - https://github.com/slapadasbas
 
@@ -157,7 +156,7 @@ def plot_outliers(df: pd.DataFrame) -> None:
     plt.show()
 
 
-help(_dtypes)
+#help(_dtypes)
 
 
 def glimpse(df, maxvals=10, maxlen=110):

@@ -9,8 +9,8 @@ Pycarot Libraies
 
 - Confusion Matrix : sklearn에 다중분류 버전이 잇음
 - Classification report  : 코드 참조
-- Decision Boundary
-- Plot Error plot
+- Decision Boundary : https://www.scikit-yb.org/en/latest/api/contrib/boundaries.html
+- Plot Error plot : 
 
 Prediction Error Plot
 

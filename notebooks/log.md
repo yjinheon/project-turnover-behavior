@@ -53,3 +53,11 @@
 
 ### 211202
 
+- feature selection 방법론 검토
+- [feature selection 관련](https://towardsdatascience.com/the-3-ways-to-compute-feature-importance-in-the-random-forest-96c86b49e6d4)
+
+
+### 211203
+
+- mlops 방법론 검토
+- https://github.com/mljar/mljar-supervised
