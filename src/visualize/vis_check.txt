@@ -1,6 +1,6 @@
-## 분류분제 시각화 검토
+분류분제 시각화 검토
 
-- yellowbrick libray활용`
+- yellowbrick libray 활용
 
 + Classification Report: A visual classification report that displays precision, recall, and F1 per-class as a heatmap.
   + Confusion Matrix: A heatmap view of the confusion matrix of pairs of classes in multi-class classification.
