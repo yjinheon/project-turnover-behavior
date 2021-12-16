@@ -17,19 +17,24 @@ def load_config(config_name):
 
 config = load_config("_config_ex1.yaml")
 
-
+# dir
 def search(dirname):
     for dirname, _, filenames in os.walk(dirname):
             for filename in filenames:
                 full_filename = os.path.join(dirname, filename)
                 print (full_filename)
 
+obj = MLclass(X_train, y_train)
+
+class MLclass:
+    def __init__(self, config_path):
+        self.df = pd.read_csv(os.path.join(config["data_directory"], config["data_name"]).replace("\\", "/"),encoding='cp949')
+    
+    def subset_df(self):
+    
 
 
-# load data
-df = pd.read_csv(os.path.join(config["data_directory"], config["data_name"]).replace("\\", "/"),encoding='cp949') 
-df.columns = df.columns.str.lower()
-
+# 
 
 
 

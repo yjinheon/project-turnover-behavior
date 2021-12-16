@@ -21,6 +21,7 @@
     - 다중공선성 검정(VIF)
   - categorical data
     - 독립성 검정
+    - Odds ratio
     - Mutual Information Feature Selection(SelectKbest)
     
 
