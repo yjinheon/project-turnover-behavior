@@ -15,48 +15,81 @@ from pandas.api.types import is_numeric_dtype
 sns.set()
 
 
-def _dtypes(df: pd.DataFrame) -> pd.DataFrame:
-    """A private function that returns the data types of all the columns in a dataframe
-    Parameters
-    ----------
-    df : pd.DataFrame
-        The dataframe to be analyzed
-    Returns
-    -------
-    pd.DataFrame
-        A dataframe of columns with their respective data types
+
+# load data iris
+
+data = sns.load_dataset('penguins')
+
+
+class Lookdata(df):
     """
-    return pd.DataFrame(df.dtypes).rename(columns={0: 'dtype'})
-
-
-def _compute_outlier(df: pd.Series) -> list:
-    """ A private function that returns the list of outliers in a pd.Series
-    :param df: pd.Series
-        The column of the dataframe to be analyzed
-    :return: list
-        The list of outliers
-    :raises: TypeError
-        If the datatype of the column is not integer or float
+    EDA tool class
     """
+    
+    def __init__(self,df) :
+        self.df = df
+        
+    def _dtypes(df):
+        return pd.DataFrame(df.dtypes).rename(columns={0: 'dtype'})
+    
+    def glimpse(df, maxvals=10, maxlen=110):
+        print('Shape: ', df.shape)
+    
+        def pad(y):
+            max_len = max([len(x) for x in y])
+            return [x.ljust(max_len) for x in y]
+    
+        # Column Name
+        toprnt = pad(df.columns.tolist())
+    
+        # Column Type
+        toprnt = pad([toprnt[i] + ' ' + str(df.iloc[:,i].dtype) for i in range(df.shape[1])])
+    
+        # Num NAs
+        num_nas = [df.iloc[:,i].isnull().sum() for i in range(df.shape[1])]
+        num_nas_ratio = [int(round(x*100/df.shape[0])) for x in num_nas]
+        num_nas_str = [str(x) + ' (' + str(y) + '%)' for x,y in zip(num_nas, num_nas_ratio)]
+        max_len = max([len(x) for x in num_nas_str])
+        num_nas_str = [x.rjust(max_len) for x in num_nas_str]
+        toprnt = [x + ' ' + y + ' NAs' for x,y in zip(toprnt, num_nas_str)]
+    
+        # Separator
+        toprnt = [x + ' : ' for x in toprnt]
+    
+        # Values
+        toprnt = [toprnt[i] + ', '.join([str(y) for y in df.iloc[:min([maxvals,df.shape[0]]), i]]) for i in range(df.shape[1])]
+    
+        # Trim to maxlen
+        toprnt = [x[:min(maxlen, len(x))] for x in toprnt]
+    
+        for x in toprnt:
+            print(x)
+        
 
-    if not is_numeric_dtype(df):
-        raise TypeError("Must pass a column with numeric data type")
+    def _compute_outlier(df: pd.Series) -> list:
+        """ 
+        Compute outlier of a series
+        iqr = interquartile range
+        """
 
-    df_ = sorted(df)
-    q1, q3 = np.percentile(df_, [25, 75])
-    iqr = q3 - q1
+        if not is_numeric_dtype(df):
+            raise TypeError("Must pass a column with numeric data type")
 
-    lower_bound = q1 - (1.5 * iqr)
-    upper_bound = q3 + (1.5 * iqr)
-    outliers = [x for x in df_ if x < lower_bound or x > upper_bound]
+        df_ = sorted(df)
+        q1, q3 = np.percentile(df_, [25, 75])
+        iqr = q3 - q1
 
-    return outliers
+        lower_bound = q1 - (1.5 * iqr)
+        upper_bound = q3 + (1.5 * iqr)
+        outliers = [x for x in df_ if x < lower_bound or x > upper_bound]
+
+        return outliers
 
 
-def _remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
-    return df.loc[(~df.isin(_compute_outlier(df)))]
+    def _remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
+        return df.loc[(~df.isin(_compute_outlier(df)))]
 
-
+"""
 def _count_zeros(df: pd.DataFrame) -> int:
     return len([f for f in df.values if f == 0])
 
@@ -158,36 +191,5 @@ def plot_outliers(df: pd.DataFrame) -> None:
 
 #help(_dtypes)
 
+"""
 
-def glimpse(df, maxvals=10, maxlen=110):
-    print('Shape: ', df.shape)
-    
-    def pad(y):
-        max_len = max([len(x) for x in y])
-        return [x.ljust(max_len) for x in y]
-    
-    # Column Name
-    toprnt = pad(df.columns.tolist())
-    
-    # Column Type
-    toprnt = pad([toprnt[i] + ' ' + str(df.iloc[:,i].dtype) for i in range(df.shape[1])])
-    
-    # Num NAs
-    num_nas = [df.iloc[:,i].isnull().sum() for i in range(df.shape[1])]
-    num_nas_ratio = [int(round(x*100/df.shape[0])) for x in num_nas]
-    num_nas_str = [str(x) + ' (' + str(y) + '%)' for x,y in zip(num_nas, num_nas_ratio)]
-    max_len = max([len(x) for x in num_nas_str])
-    num_nas_str = [x.rjust(max_len) for x in num_nas_str]
-    toprnt = [x + ' ' + y + ' NAs' for x,y in zip(toprnt, num_nas_str)]
-    
-    # Separator
-    toprnt = [x + ' : ' for x in toprnt]
-    
-    # Values
-    toprnt = [toprnt[i] + ', '.join([str(y) for y in df.iloc[:min([maxvals,df.shape[0]]), i]]) for i in range(df.shape[1])]
-    
-    # Trim to maxlen
-    toprnt = [x[:min(maxlen, len(x))] for x in toprnt]
-    
-    for x in toprnt:
-        print(x)
