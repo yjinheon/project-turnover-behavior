@@ -4,18 +4,19 @@ import numpy as np
 import joblib   
 import os
 import yaml
+from pathlib import Path # 상위 폴더 경로 관련
 from tools import *
-from tools.glimpse import *
+
 
 # folder to load config file
-CONFIG_PATH = "../"
+BASE_PATH = Path(__file__).parent.parent
+
 # Function to load yaml configuration file
 def load_config(config_name):
-    with open(os.path.join(CONFIG_PATH, config_name)) as file:
+    with open(os.path.join(BASE_PATH, config_name)) as file:
         config = yaml.safe_load(file)
     return config
 
-config = load_config("_config_ex1.yaml")
 
 # dir
 def search(dirname):
@@ -24,13 +25,10 @@ def search(dirname):
                 full_filename = os.path.join(dirname, filename)
                 print (full_filename)
 
-obj = MLclass(X_train, y_train)
-
-class MLclass:
-    def __init__(self, config_path):
-        self.df = pd.read_csv(os.path.join(config["data_directory"], config["data_name"]).replace("\\", "/"),encoding='cp949')
+config = load_config('_config_ex1.yaml')                
     
-    def subset_df(self):
+    
+df = pd.read_csv(config['data_directory']+config['data_name'],encoding='cp949')
     
 
 
@@ -41,4 +39,3 @@ if __name__ == "__main__":
     print(df.columns)
     print(df.info())
     print(df.describe())
-    print(glimpse(df))

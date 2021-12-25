@@ -50,6 +50,9 @@ def initial_eda(df):
 # load data iris
 
 data = sns.load_dataset('penguins')
+
+
+
 class Lookdata():
     """
     EDA tool class
@@ -123,7 +126,7 @@ class Lookdata():
         A private function that removes the outliers in a pd.Series
         """
         return s.loc[~s.isin(self._compute_outlier(s))]
-    
+
 
     def diagnose(self):
         """
@@ -164,8 +167,7 @@ class Lookdata():
             x_ = pd.Series(x_).to_frame() # convert series to dataframe
             x_['variable'] = str(col)  
             # method chaining 을 여러 줄에 걸쳐서
-            x_ = x_.groupby(['variable',col]) \ 
-                .size() \
+            x_ = x_.groupby(['variable',col]).size() \
                 .to_frame() \
                 .reset_index() \
                 .rename(columns={col : 'levels', 0:'freq'}) 
@@ -255,27 +257,41 @@ class Lookdata():
         q['rate'] = q['outliers_mean'] / q['with_outliers_mean']
         
         return q
+
+class Dataplots(Lookdata):
     
     
-class Dataplots():
-    
-    def __init__():
-        pass
-    
-    def plot_outliers(self,s):
-        try:
+    def plot_outliers(self,colname):
+        """
+        series에서 이상치를 확인하고 이상치를 제거한 series를 반환
+        """
+        s=self.df[colname]
         
-        except:
+        try:
+            f, ax = plt.subplots(2,2)
             
-        f, ax 
-    
+            sns.boxplot(s, orient='v', ax=ax[0,0]).set_title("With Outliers")
+            sns.histplot(s, ax=ax[0,1]).set_title('With Outliers')
+            sns.boxplot(self._remove_outliers(s), orient='v', ax=ax[1,0]).set_title("Without Outliers")
+            sns.histplot(self._remove_outliers(s), ax=ax[1,1]).set_title('Without Outliers')
+            f.tight_layout(w_pad=1.5,h_pad=1.0)
+            
+
+            plt.savefig(f'{s.name}.png')
+        
+        except ValueError as v:
+            if s.dtype == 'object':
+                raise Exception("This is not a numeric series")
+            else:
+                raise Exception(v)
+            
     
     def plot_outliers_all(self):
         numeric_cols=self.numeric_df.columns.to_list()
        
         for col in numeric_cols:
            f, ax = plt.subplots(2,2)
-           f.tight_layout()
+           
            # subtitle
            f.suptitle("Outlier Analysis for {}".format(col))
            # orient 는 상자 세우기/눞히기의 차이
@@ -286,6 +302,8 @@ class Dataplots():
            f.tight_layout(w_pad=1.5,h_pad=1.0)
            
     plt.show()
+
+
     # visualize
     ## single variable
     
@@ -391,11 +409,14 @@ def plot_outliers(df: pd.DataFrame) -> None:
 
 #help(_dtypes)
 
+
+
+
 """
 
 if __name__ == "__main__":
     df = sns.load_dataset('iris')
-    ins = Lookdata(df)
+    ins = Dataplots(df)
     diag=ins.diagnose()
     print(diag)
     print(ins.dtypes_df())
@@ -403,4 +424,5 @@ if __name__ == "__main__":
     print(dd)
     print(ins.diagnose_numeric())
     print(ins.diagnose_categorical())
-    ins.plot_outliers()
+    ins.plot_outliers("sepal_length")
+    ins.plot_outliers_all()

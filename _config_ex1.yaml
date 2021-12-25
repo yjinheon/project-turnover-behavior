@@ -6,7 +6,7 @@ email : "yjinheon@gmail.com"
 
 
 # --- Initial Setting --- #
-data_directory: "../data"
+data_directory: "../data/"
 data_name: "GP18_2019_use.csv"
 drop_columns: [""]
 target_name: ""
