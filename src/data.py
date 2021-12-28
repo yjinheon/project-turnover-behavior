@@ -7,7 +7,6 @@ import yaml
 from pathlib import Path # 상위 폴더 경로 관련
 from tools import *
 
-
 # folder to load config file
 BASE_PATH = Path(__file__).parent.parent
 

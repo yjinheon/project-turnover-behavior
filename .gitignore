@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.vscode
+
+# tools 전부 제외
+src/tools/
+# data 전부 제외
+

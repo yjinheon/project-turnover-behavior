@@ -51,9 +51,58 @@ def initial_eda(df):
 
 data = sns.load_dataset('penguins')
 
+class Dataplots():
+    """
+    Data related plots
+    """
+    
+    def __init__():
+        pass
+    
+    def plot_outliers(self,colname):
+        """
+        series에서 이상치를 확인하고 이상치를 제거한 series를 반환
+        """
+        s=self.df[colname]
+        
+        try:
+            f, ax = plt.subplots(2,2)
+            
+            sns.boxplot(s, orient='v', ax=ax[0,0]).set_title("With Outliers")
+            sns.histplot(s, ax=ax[0,1]).set_title('With Outliers')
+            sns.boxplot(self._remove_outliers(s), orient='v', ax=ax[1,0]).set_title("Without Outliers")
+            sns.histplot(self._remove_outliers(s), ax=ax[1,1]).set_title('Without Outliers')
+            f.tight_layout(w_pad=1.5,h_pad=1.0)
+            
+
+            plt.savefig(f'{s.name}.png')
+        
+        except ValueError as v:
+            if s.dtype == 'object':
+                raise Exception("This is not a numeric series")
+            else:
+                raise Exception(v)
+            
+    
+    def plot_outliers_all(self):
+        numeric_cols=self.numeric_df.columns.to_list()
+       
+        for col in numeric_cols:
+           f, ax = plt.subplots(2,2)
+           
+           # subtitle
+           f.suptitle("Outlier Analysis for {}".format(col))
+           # orient 는 상자 세우기/눞히기의 차이
+           sns.boxplot(self.df[col], orient='v', ax=ax[0][0]).set_title("With Outlier")
+           sns.histplot(self.df[col], ax=ax[0][1]).set_title("With Outlier")
+           sns.boxplot(self._remove_outliers(self.df[col]), orient='v', ax=ax[1][0]).set_title("Without Outlier")
+           sns.histplot(self._remove_outliers(self.df[col]), ax=ax[1][1]).set_title("Without Outlier")
+           f.tight_layout(w_pad=1.5,h_pad=1.0)
+           
+    plt.show()
 
 
-class Lookdata():
+class Lookdata(Dataplots):
     """
     EDA tool class
     """
@@ -258,52 +307,10 @@ class Lookdata():
         
         return q
 
-class Dataplots(Lookdata):
-    
-    
-    def plot_outliers(self,colname):
-        """
-        series에서 이상치를 확인하고 이상치를 제거한 series를 반환
-        """
-        s=self.df[colname]
-        
-        try:
-            f, ax = plt.subplots(2,2)
-            
-            sns.boxplot(s, orient='v', ax=ax[0,0]).set_title("With Outliers")
-            sns.histplot(s, ax=ax[0,1]).set_title('With Outliers')
-            sns.boxplot(self._remove_outliers(s), orient='v', ax=ax[1,0]).set_title("Without Outliers")
-            sns.histplot(self._remove_outliers(s), ax=ax[1,1]).set_title('Without Outliers')
-            f.tight_layout(w_pad=1.5,h_pad=1.0)
-            
-
-            plt.savefig(f'{s.name}.png')
-        
-        except ValueError as v:
-            if s.dtype == 'object':
-                raise Exception("This is not a numeric series")
-            else:
-                raise Exception(v)
-            
-    
-    def plot_outliers_all(self):
-        numeric_cols=self.numeric_df.columns.to_list()
-       
-        for col in numeric_cols:
-           f, ax = plt.subplots(2,2)
-           
-           # subtitle
-           f.suptitle("Outlier Analysis for {}".format(col))
-           # orient 는 상자 세우기/눞히기의 차이
-           sns.boxplot(self.df[col], orient='v', ax=ax[0][0]).set_title("With Outlier")
-           sns.histplot(self.df[col], ax=ax[0][1]).set_title("With Outlier")
-           sns.boxplot(self._remove_outliers(self.df[col]), orient='v', ax=ax[1][0]).set_title("Without Outlier")
-           sns.histplot(self._remove_outliers(self.df[col]), ax=ax[1][1]).set_title("Without Outlier")
-           f.tight_layout(w_pad=1.5,h_pad=1.0)
-           
-    plt.show()
 
 
+    
+    
     # visualize
     ## single variable
     
@@ -416,7 +423,7 @@ def plot_outliers(df: pd.DataFrame) -> None:
 
 if __name__ == "__main__":
     df = sns.load_dataset('iris')
-    ins = Dataplots(df)
+    ins = Lookdata(df)
     diag=ins.diagnose()
     print(diag)
     print(ins.dtypes_df())
@@ -425,4 +432,5 @@ if __name__ == "__main__":
     print(ins.diagnose_numeric())
     print(ins.diagnose_categorical())
     ins.plot_outliers("sepal_length")
+    ins.plot_outliers("sepal_width")
     ins.plot_outliers_all()
