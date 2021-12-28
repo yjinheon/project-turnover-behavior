@@ -137,7 +137,7 @@ feature_dict =  {
         'g181a001':'year_start_date', # 현일자리 시작년
         'g181a002':'month_start_date', # 현일자리 시작월
         'g181a004_10':'ind_cat', # 일자리 산업 대분류
-        'g181a010':'corp_worker_num', # 기업체 종사자 수
+        'g181a010':'corp_worker_cat', # 기업체 종사자 수 # 결측값문제로 categorical로 변경
         'g181a011':'biz_worker_cat', # 사업체 종사자 수
         'g181a018':'tw_hour', # 출근시간_시간
         'g181a019':'tw_min', # 출근시간_분
@@ -152,17 +152,17 @@ feature_dict =  {
         'g181a035':'shift_cat' ,    # 교대제 여부
         'g181a038':'pension_cat',     # 퇴직금 제공 여부
         'g181a039':'payed_vc_cat',     # 제공여부 2- 유급휴가
-        'g181a043':'maternitylv_cat',     #  6- 육아휴직
+        'g181a043':'maternity_cat',     #  6- 육아휴직
         'g181a045':'overtime_pay_cat',     # 8- 시간 외 수당
         'g181a046':'bonus_cat',     # 9- 상여금
-        'g181a048':'weely_hl_cat',     # 11- 유급주휴
+        'g181a048':'weekly_hl_cat',     # 11- 유급주휴
         'g181a392':'baby_vc_cat',     # 12- 산전후휴가
         'g181a120':'wage_type_cat',     # 급여 형태 구분
         'g181a122':'month_wage_num',     # 월 평균 근로소득
         'g181a126':'sat_wage_num',     # 만족도-임금
         'g181a127':'sat_stable_num',     # 만족도-고용안정성
         'g181a128':'sat_work_num',     # 만족도-직무내용
-        'g181a129':'sat_envi_num',     # 만족도-근무환경
+        'g181a129':'sat_env_num',     # 만족도-근무환경
         'g181a130':'sat_wt_num',     # 만족도-노동시간
         'g181a131':'sat_potential_num',     # 만족도-발전가능성
         'g181a132':'sat_relation_num',     # 만족도-인간관계
@@ -206,12 +206,18 @@ feature_dict =  {
         'g181p008':'child_cat',     # 부양자녀 유무
         'g181p036':'parent_asset_cat',     # 부모님 자산규모
         'g181p046':'livetype_cat',     # 거주형태
-        'g181p041':'support_cat'      # 경제적 지원여부
+        'g181p041':'support_cat',      # 경제적 지원여부
+        # subset에서 추가한 변수들
+        'worker_type':'worker_type',
+        'regular_worker':'regular_worker',
+        'turnover_exp':'turnover_exp',
+        'work_exp':'work_exp'        
 }
 
 # subset data
 
 def subset_df(df):
+    df.columns = df.columns.str.lower()
     worker_df = df[feature_list]
     worker_df = worker_df[worker_df['g181sq006'].notnull()] # 근로자(일의 종류)
     
@@ -273,13 +279,66 @@ def engineer(df):
     df['work_exp'] = np.where(df['turnover_exp'].isin([0,1]),0,1)
     
     # 구직활동기간 결측값 0으로 처리
-    df['g181a189'] = df['g181a189'].fillna(0)
-    # feature name 변경 (map)
-    df.rename(columns=feature_dict, inplace=True)
     
-    #df.columns = df.columns.map(feature_dict)
+    df['g181a189'] = df['g181a189'].fillna(0)
+    
+    # feature name 변경 (map)
+    
+    df.columns = df.columns.map(feature_dict)
+    
+    df = df.drop(df[df['month_wage_num'] == -1].index) # 급여 모르는 경우 제거
+    
+    df['work_year'] = 2019 - df['year_start_date']  # 근무기간
+    
+    df['work_time_num'] = df['tw_min'] + df['tw_hour'] # 출근소요시간
+    
+    # 보험 수
+    insurances_col = [col for col in df if col.startswith('ins')]
+    df['insurances_num'] = 0
+    for col in insurances_col:
+        df['temp'] = np.where(df[col] == 1, 1, 0)
+        df['insurances_num'] += df['temp']
+    
+    # 회사 전반적 만족도
+    biz_sat_col = [col for col in df if col.startswith('sat')]
+    df['biz_sat'] = df[biz_sat_col].sum(axis=1)
+    
+    # 긍정적 감정
+    pos_col = [col for col in df if col.startswith('emg') ] 
+    df['pos'] = df[pos_col].sum(axis=1)
+    
+    # 부정적 감정
+    neg_col = [col for col in df if col.startswith('neg') ]
+    df['neg'] = df[neg_col].sum(axis=1)
+    
+    # 삶의 만족도
+    lifesat_col = [col for col in df if col.startswith('lifesat')]
+    df['lifesat'] = df[lifesat_col].sum(axis=1)
+        
+    # 혜택 수
+    benefit_col  =['pension_cat',     # 퇴직금 제공 여부
+        'payed_vc_cat',     # 제공여부 2- 유급휴가
+        'maternity_cat',     #  6- 육아휴직
+        'overtime_pay_cat',     # 8- 시간 외 수당
+        'bonus_cat',     # 9- 상여금
+        'weekly_hl_cat',     # 11- 유급주휴
+        'baby_vc_cat'] # 출산휴가
 
+    df['benefit_num'] = 0
+
+    for cols in benefit_col:
+        df['temp'] = np.where(df[cols]==1, 1, 0)
+        df['benefit_num'] += df['temp']
+    
+    df.drop(columns='temp',axis=1,inplace=True)
+    
     return df
+
+
+# Preprocessing Class 정의
+
+
+
 
 # Scalings
 
@@ -288,7 +347,7 @@ def engineer(df):
 # Pipeline
         
         
-       
+
 
 """        
 data = data.drop(config["drop_columns"], axis=1)

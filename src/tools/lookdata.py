@@ -308,9 +308,6 @@ class Lookdata(Dataplots):
         return q
 
 
-
-    
-    
     # visualize
     ## single variable
     

@@ -132,7 +132,7 @@ dmypy.json
 
 # tools
 
-
+src/tools/
 
 # data
 
