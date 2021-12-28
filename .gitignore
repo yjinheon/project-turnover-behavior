@@ -130,7 +130,9 @@ dmypy.json
 
 .vscode
 
-# tools 전부 제외
-src/tools/
-# data 전부 제외
+# tools
+
+
+
+# data
 
