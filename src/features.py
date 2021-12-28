@@ -281,9 +281,6 @@ def engineer(df):
 
     return df
 
-
-
-
 # Scalings
 
 
@@ -291,8 +288,8 @@ def engineer(df):
 # Pipeline
         
         
-        
-        
+       
+
 """        
 data = data.drop(config["drop_columns"], axis=1)
 # Define X (independent variables) and y (target variable)
