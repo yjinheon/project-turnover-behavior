@@ -335,9 +335,12 @@ def engineer(df):
     return df
 
 
-# Preprocessing Class 정의
+# Preprocessing Class
 
-
+class Preprocess():
+    """
+    
+    """
 
 
 # Scalings
@@ -346,16 +349,3 @@ def engineer(df):
 
 # Pipeline
         
-        
-
-
-"""        
-data = data.drop(config["drop_columns"], axis=1)
-# Define X (independent variables) and y (target variable)
-X = np.array(data.drop(config["target_name"], 1))
-y = np.array(data[config["target_name"]])
-# split data into train and test set
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=config["test_size"], random_state= config["random_state"])
-
-"""

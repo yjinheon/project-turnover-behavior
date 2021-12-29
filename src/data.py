@@ -31,7 +31,7 @@ df = pd.read_csv(config['data_directory']+config['data_name'],encoding='cp949')
 df = subset_df(df)
 df = engineer(df)
 
-
+"""
 if __name__ == "__main__":
     # load data
     print(df.head())
@@ -40,3 +40,4 @@ if __name__ == "__main__":
     print(df.info())
     print(df.describe())
     search(config['data_directory'])
+"""
