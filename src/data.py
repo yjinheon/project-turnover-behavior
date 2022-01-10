@@ -29,9 +29,11 @@ config = load_config('_config_ex1.yaml')
 
 df = pd.read_csv(config['data_directory']+config['data_name'],encoding='cp949')
 df = subset_df(df)
-df = engineer(df)
+
+
 
 """
+#df = engineer(df)
 if __name__ == "__main__":
     # load data
     print(df.head())
