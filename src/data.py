@@ -31,7 +31,7 @@ df = pd.read_csv(config['data_directory']+config['data_name'],encoding='cp949')
 df = subset_df(df)
 
 
-df['g181a297'] = np.where(df['gl181a297']==1,1,0) # target encoding
+df['g181a297'] = np.where(df['g181a297']==1,1,0) # target encoding
 
 """
 #df = engineer(df)

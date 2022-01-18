@@ -62,3 +62,18 @@
 
 - mlops 방법론 검토
 - https://github.com/mljar/mljar-supervised
+
+### 211204
+
+고려가능한 조합들
+
+- Stretegy
+- 알고리즘
+- hyperparmeter
+
+추가 알고리즘
+
+- xgboost
+- catboost
+
+plotting 고려
