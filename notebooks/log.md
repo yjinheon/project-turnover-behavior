@@ -77,3 +77,9 @@
 - catboost
 
 plotting 고려
+
+
+### 220118
+
+- ColumnTransformer 갈아 엎기
+- 
