@@ -132,7 +132,7 @@ dmypy.json
 
 # tools
 
-src/tools/
+# src/tools/ 필용할 경우 다시
 
 # data
 

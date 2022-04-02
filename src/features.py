@@ -35,14 +35,14 @@ feature_list = [
         'g181d001', # turnover_exp
         'g181d006', # work_exp
         'g181e001', # 전직장 경험
-       'g181a021', # 상용근로자 여부
-       'g181sq006', # 사용근로자 여부
-       'g181pid', # id 
-       'g181majorcat', # 전공계열
-       'g181sex', # 성별 
-       'g181birthy', # 출생년
-       'g181age', # 연력
-       'g181graduy', # 졸업년
+        'g181a021', # 상용근로자 여부
+        'g181sq006', # 사용근로자 여부
+        'g181pid', # id 
+        'g181majorcat', # 전공계열
+        'g181sex', # 성별 
+        'g181birthy', # 출생년
+        'g181age', # 연력
+        'g181graduy', # 졸업년
 ### 사업체 관련 // 현일자리 시작 연월 사용 불가능    
         'g181a001',  # 현일자리 시작년
         'g181a002', # 현일자리  시작월
@@ -56,7 +56,7 @@ feature_list = [
         'g181a118', # 주당초과 근로시간
         'g181a119', # 월평균 후일근로
         'g181a020', # 사업체형태
-       'g181a022',     # 정규직 비정규직 여부
+        'g181a022',     # 정규직 비정규직 여부
 ### 혜택관련
         'g181a390',     # 일자리 형태 자발, 비자발 여부
         'g181a035' ,    # 교대제 여부
@@ -127,66 +127,41 @@ feature_list = [
 # subset data
 
 def subset_df(df):
-    df.columns = df.columns.str.lower()
-    worker_df = df[feature_list]
-    worker_df = worker_df[worker_df['g181sq006'].notnull()] # 근로자(일의 종류)
-    
-    # 임금종사자 여부
-    """
-    1	타인 또는 회사에 고용되어 보수(돈)를 받고 일한다.(직장, 아르바이트 등 포함)
-    2	내 사업을 한다.
-    3	가족의 일을 돈을 받지 않고 돕는다.
-    """
-    worker_cond = [
+        df.columns = df.columns.str.lower()
+        worker_df = df[feature_list]
+        worker_df = worker_df[worker_df['g181sq006'].notnull()] # 근로자(일의 종류)
+
+        # 임금종사자 여부
+        """
+        1	타인 또는 회사에 고용되어 보수(돈)를 받고 일한다.(직장, 아르바이트 등 포함)
+        2	내 사업을 한다.
+        3	가족의 일을 돈을 받지 않고 돕는다.
+        """
+        worker_cond = [
         (worker_df['g181sq006'] == 1), 
         (worker_df['g181sq006'] == 2),
         (worker_df['g181sq006'] == 3)
-    ]
-    
-    worker_choices = ['employed','self_employed','non_paid']
-    
-    worker_df['worker_type'] = np.select(worker_cond, worker_choices,default=None)
-    
-    
-    worker_df.drop(['g181sq006'], axis=1, inplace=True)
-    
-    # 임금근로자만 추출
-    worker_df = worker_df[worker_df['worker_type'] == 'employed'] 
-    
-    
-    # 상용 근로자만 추출
-    """
-    1	상용근로자
-    2	상용근로자 외 임시,일용직
-    """
-    regular_cond = [worker_df['g181a021'] == 1,
-                    worker_df['g181a021'] != 1]
-    
-    
-    worker_df['regular_worker'] = np.select(regular_cond, ['yes','no'],default=None)
-    worker_df = worker_df[worker_df['regular_worker'] == 'yes']
-    
-    worker_df.drop(['g181a021'], axis=1, inplace=True)
-    
-    return worker_df
+        ]
 
+        worker_choices = ['employed','self_employed','non_paid']
 
+        worker_df['worker_type'] = np.select(worker_cond, worker_choices,default=None)
+        worker_df.drop(['g181sq006'], axis=1, inplace=True)
 
+        # 임금근로자만 추출
+        worker_df = worker_df[worker_df['worker_type'] == 'employed'] 
 
-"""
-def _get_train_and_test(self):
-        
-        #Split data into train and test datasets
-        #:return:
-        self.X_train=self.all_data[:self.number_of_train]
-        self.X_test=self.all_data[self.number_of_train:]
+        # 상용 근로자만 추출
+        """
+        1	상용근로자
+        2	상용근로자 외 임시,일용직
+        """
+        regular_cond = [worker_df['g181a021'] == 1,
+                        worker_df['g181a021'] != 1]
 
-"""
+        worker_df['regular_worker'] = np.select(regular_cond, ['yes','no'],default=None)
+        worker_df = worker_df[worker_df['regular_worker'] == 'yes']
 
-# split data
+        worker_df.drop(['g181a021'], axis=1, inplace=True)
 
-
-
-
-# Pipeline
-        
+        return worker_df

@@ -1,3 +1,5 @@
+# Preprocessing Class
+
 class Preprocess():
     """
     X_train, X_test  데이터에 대한 처리
@@ -10,13 +12,14 @@ class Preprocess():
         print("Preprocessing Class")
         self.numeric_df = None
         self.cat_df = None
-        self.ordinal_col = ['biz_worker_cat','parent_asset_cat']
+        self.ordinal = None
         
     
     def get_dtypes(self,data):
         self.numeric_df = data.select_dtypes(include=['number'])
         self.cat_df = data.select_dtypes(exclude=['number'])
         
+                 
     def engineer(self,data):
         
         # id 칼럼 제거
@@ -93,13 +96,14 @@ class Preprocess():
         data['seeking_time_num'] = data['seeking_time_num'].fillna(0)
     
         data.drop(columns='temp',axis=1,inplace=True) # temp 삭제
+        data.drop(columns='corp_worker_num',axis=1,inplace=True) 
         data.drop(data[data.month_wage_num==-1].index,inplace=True) # 급여 모르는 경우 제거
     
         return data
     
     def drop_col(self,data,col):
         """
-        추가적인 가설검증이나 모델링 결과에 따라 컬럼 제거
+        추가적인 가설검증이나 모델링 결과에 따라 드롭해야할 컬럼이 생길 경우 
         """
         data.drop(columns=col,axis=1,inplace=True)
         
@@ -117,8 +121,8 @@ class Preprocess():
         
         cat_pipeline = Pipeline(steps=[
             ('impute', SimpleImputer(strategy='most_frequent')),
-            ('one-hot', OneHotEncoder(use_cat_names=True,cols=one_hot_col))
-            ('ordial', OrdinalEncoder(cols=self.ordinal_col))
+            ('one-hot', OneHotEncoder(use_cat_names=True,cols=one))
+            ('ordial', OrdinalEncoder(cols=self.ordinal_col))))')
         ])
         num_pipeline = Pipeline(steps=[
             ('impute', SimpleImputer(strategy='mean')),
@@ -127,18 +131,25 @@ class Preprocess():
         preprocess_pipeline = ColumnTransformer(
             transformers=[
                 ('num', num_pipeline, numeric_col),
-                ('cat', cat_pipeline, cat_col)
+                ('cat', cat_pipeline, cat_col),
             ]
         )
         data = preprocess_pipeline.fit_transform(data)
         return data
+            
+        
 
 
-class PreprocessSelector():
+
+class SelectPreprocessor():
     """
-    전처리 방식 선택
+    Preprocess strategies defined and exected in this class
+    """
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+    from sklearn.pipeline import Pipeline
     
-    """
+
     def __init__(self):
         self.data=None
         self._preprocessor=Preprocess()
@@ -153,15 +164,34 @@ class PreprocessSelector():
         return self.data
 
     def _base_strategy(self):
-        self.data = self._preprocessor(self.data).base_pipline()
+        """
+        drop_strategy = {'PassengerId': 1,  # 1 indicate axis 1(column)
+                         'Cabin': 1,
+                         'Ticket': 1}
+        self.data = self._preprocessor.drop(self.data, drop_strategy)
 
+        fill_strategy = {'Age': 'Median',
+                         'Fare': 'Median',
+                         'Embarked': 'Mode'}
+        self.data = self._preprocessor.fillna(self.data, fill_strategy)
+
+        self.data = self._preprocessor.feature_engineering(self.data, 1)
+
+
+        self.data = self._preprocessor._label_encoder(self.data)
+
+        """
+        self._preprocessor.base_pipline()
+        
     def _strategy1(self):
-        self.data = self._preprocessor.drop_col(self.data,"corp_worker_cat")
         self._base_strategy()
-    
+
+        self._preprocessor.drop_col(self.data,'corp_worker_num') #   data.drop(columns='corp_worker_num',axis=1,inplace=True) 
+        
 
     def _strategy2(self):
         self._base_strategy()
 
         self.data=self._preprocessor._get_dummies(self.data,
                                         prefered_columns=None)#None mean that all feature will be dummied
+

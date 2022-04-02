@@ -5,7 +5,7 @@
 
 
 ```bash
-📦 
+
 ├─ .gitignore
 ├─ README.md
 ├─ config.yaml

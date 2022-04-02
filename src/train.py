@@ -105,8 +105,7 @@ class GridSearchHelper():
                   print("{} train accuracy is {:.3f}".format(clf_name, train_acc))
         
     def save_result(self):
-        Submission = pd.DataFrame({'PassengerId': self.submission_id,
-                                           'Survived': self.Y_pred})
+        Submission = pd.DataFrame({'PassengerId': self.submission_id,'Survived': self.Y_pred})
         file_name="{}_{}.csv".format(self.strategy_type,self.current_clf_name.lower())
         Submission.to_csv(file_name, index=False)
 
