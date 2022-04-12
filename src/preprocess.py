@@ -134,7 +134,10 @@ class Preprocess():
         return data
 
 
-class PreprocessSelector():
+
+
+
+class PreprocessSelector:
     """
     전처리 방식 선택
     

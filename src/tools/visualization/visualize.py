@@ -68,7 +68,7 @@ X, y 에 대한 plot
 class MLplots:
     
     def __init__(self):
-        self.model = None
+        pass
     
     def plot_corr_matrix(self,X,y):
         """

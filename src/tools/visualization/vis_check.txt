@@ -9,4 +9,4 @@
   + Class Balance: Visual inspection of the target to show the support of each class to the final estimator.
   + Class Prediction Error: An alternative to the confusion matrix that shows both support and the difference between actual and predicted classes.
   + Discrimination Threshold: Shows precision, recall, f1, and queue rate over all thresholds for binary classifiers that use a discrimination probability or score.
-
+  
