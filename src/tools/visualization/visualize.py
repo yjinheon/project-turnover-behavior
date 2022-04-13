@@ -142,7 +142,7 @@ def evalBinaryClassifier(model,x, y, labels=['Positives','Negatives']):
         ax = sns.heatmap(cm, annot=True, cmap='Blues', cbar=False, 
                     annot_kws={"size": 14}, fmt='g')
         cmlabels = ['True Negatives', 'False Positives',
-                  'False Negatives', 'True Positives']
+                'False Negatives', 'True Positives']
         for i,t in enumerate(ax.texts):
             t.set_text(t.get_text() + "\n" + cmlabels[i])
         plt.title('Confusion Matrix', size=15)
@@ -153,9 +153,9 @@ def evalBinaryClassifier(model,x, y, labels=['Positives','Negatives']):
         df = pd.DataFrame({'probPos':pos_p, 'target': y})
         plt.subplot(132)
         plt.hist(df[df.target==1].probPos, density=True, 
-                 alpha=.5, color='green',  label=labels[0])
+                alpha=.5, color='green',  label=labels[0])
         plt.hist(df[df.target==0].probPos, density=True, 
-                 alpha=.5, color='red', label=labels[1])
+                alpha=.5, color='red', label=labels[1])
         plt.axvline(.5, color='blue', linestyle='--', label='Boundary')
         plt.xlim([0,1])
         plt.title('Distributions of Predictions', size=15)
@@ -168,7 +168,7 @@ def evalBinaryClassifier(model,x, y, labels=['Positives','Negatives']):
         roc_auc = auc(fp_rates, tp_rates)
         plt.subplot(133)
         plt.plot(fp_rates, tp_rates, color='green',
-                 lw=1, label='ROC curve (area = %0.2f)' % roc_auc)
+                lw=1, label='ROC curve (area = %0.2f)' % roc_auc)
         plt.plot([0, 1], [0, 1], lw=1, linestyle='--', color='grey')
         #plot current decision point:
         tn, fp, fn, tp = [i for i in cm.ravel()]

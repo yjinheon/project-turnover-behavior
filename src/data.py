@@ -31,6 +31,7 @@ df = pd.read_csv(config['data_directory']+config['data_name'],encoding='cp949')
 df = subset_df(df)
 
 
+df.drop(df[df.g181a122==-1].index,inplace=True) # 급여 모르는 경우 제거
 df['g181a297'] = np.where(df['g181a297']==1,1,0) # target encoding
 
 """
