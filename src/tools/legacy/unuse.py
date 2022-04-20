@@ -79,3 +79,15 @@ for encoder in encoder_list:
     print(f1_score(y_test, y_pred, average='macro'))
         """
         pass
+    
+"""
+#df = engineer(df)
+if __name__ == "__main__":
+    # load data
+    print(df.head())
+    print(df.shape)
+    print(df.columns)
+    print(df.info())
+    print(df.describe())
+    search(config['data_directory'])
+"""

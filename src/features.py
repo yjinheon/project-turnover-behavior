@@ -163,5 +163,8 @@ def subset_df(df):
         worker_df = worker_df[worker_df['regular_worker'] == 'yes']
 
         worker_df.drop(['g181a021'], axis=1, inplace=True)
+        worker_df.drop(worker_df[worker_df.g181a122==-1].index,inplace=True) # 급여 모르는 경우 제거
+        worker_df['g181a297'] = np.where(worker_df['g181a297']==1,1,0) # target encoding
+
 
         return worker_df

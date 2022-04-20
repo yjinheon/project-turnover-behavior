@@ -13,7 +13,7 @@ target_name: ""
 test_size: 0.3
 random_state: 42
 model_directory: "../models"
-model_name: lightgbm.json
+#model_name: lightgbm.json
 
 
 # hyperarameters
@@ -24,6 +24,5 @@ algorithm: auto
 leaf_size: 15
 p: 2
 metric: minkowski
-n_jobs: 1
-
+n_jobs: -1
 

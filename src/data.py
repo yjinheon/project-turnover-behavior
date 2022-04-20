@@ -29,19 +29,8 @@ config = load_config('_config_ex1.yaml')
 
 df = pd.read_csv(config['data_directory']+config['data_name'],encoding='cp949')
 df = subset_df(df)
-
-
-df.drop(df[df.g181a122==-1].index,inplace=True) # 급여 모르는 경우 제거
 df['g181a297'] = np.where(df['g181a297']==1,1,0) # target encoding
 
-"""
-#df = engineer(df)
-if __name__ == "__main__":
-    # load data
-    print(df.head())
-    print(df.shape)
-    print(df.columns)
-    print(df.info())
-    print(df.describe())
-    search(config['data_directory'])
-"""
+
+def main():
+    pass
